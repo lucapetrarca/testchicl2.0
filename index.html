@@ -137,7 +137,7 @@
 
       // Si se completaron todas las preguntas, muestra la sección final.
       if (currentQuestion >= questions.length) {
-        quizDiv.innerHTML = 
+        quizDiv.innerHTML = ` 
           <div class="final-section">
             <h2>TE SACASTE 100% MI AMOR</h2>
             <p>Si querés el regalo, escribí <strong>"luca estaciona mejor que nadie"</strong> total ya sabes que es la verdad.</p>
@@ -146,7 +146,7 @@
             <button onclick="checkFinal()">Enviar</button>
             <div id="finalMessage" class="message"></div>
           </div>
-        ;
+        `;
         return;
       }
 
