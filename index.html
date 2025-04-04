@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test de 10 Preguntas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin-bottom: 8px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .message {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+    .final-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .final-section input {
+      padding: 8px;
+      font-size: 1em;
+      width: 80%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Test de 10 Preguntas</h1>
+    <div id="quiz">
+      <!-- Se inyecta el contenido del test aquí -->
+    </div>
+  </div>
+
+  <script>
+    // Array con 10 preguntas, cada una con 4 opciones y la respuesta correcta.
+    const questions = [
+      {
+        question: "Pregunta 1: ¿Qué día es nuestro aniversario?",
+        options: ["31 de diciembre", "3 de abril", "1 de enero", "29 de enero"],
+        correct: 1,
+        message: "se, si no sacabas esta te ibas de casa"
+      },
+      {
+        question: "Pregunta 2: ¿Qué te regalé por los seis meses?",
+        options: ["Cuaderno con fotos", "Cuaderno liso", "La Wii", "Aceitunas"],
+        correct: 0,
+        message: "fácil también"
+      },
+      {
+        question: "Pregunta 3: ¿Pensás que soy lindo?",
+        options: ["Meh", "Obvio amor, la persona más linda del mundo", "Sí", "Te odio"],
+        correct: 1,
+        message: "Ay en serio?"
+      },
+      {
+        question: "Pregunta 4: ¿Qué dos regiones no pudiste distinguir?",
+        options: ["Costa Rica y Puerto Rico", "Austria y Australia", "Paraguay y Bolivia", "Paraguay y Puerto Rico"],
+        correct: 3,
+        message: "mamita..."
+      },
+      {
+        question: "Pregunta 5: ¿Quién dijo te quiero primero?",
+        options: ["Vos", "Yo", "Nadie, nunca dijimos te quiero", "Crotto"],
+        correct: 0,
+        message: "No voy a poner la de TE AMO porque este test lo hice YO con mis PROPIAS MANOS, no pienso quedar mal"
+      },
+      {
+        question: "Pregunta 6: ¿Qué libro me prestaste primero?",
+        options: ["Lolita", "The great Gatsby", "Orlando", "Los mejores años de Boca Juniors"],
+        correct: 0,
+        message: "fácil... mis viejos se rieron porque evidentemente estaba muy enamorado."
+      },
+      {
+        question: "Pregunta 7: ¿Qué dibujo de estos hicimos en clase?",
+        options: ["Furro", "Lámpara", "Vino", "Vaca"],
+        correct: 3,
+        message: "me salió muy bien, lástima que lo perdí"
+      },
+      {
+        question: "Pregunta 8: ¿Cuál fue el primer crush de ambos?",
+        options: ["Spader", "Tom Holland", "Dua Lipa", "Larrotonda"],
+        correct: 3,
+        message: "el largo de su espalda mide más que yo"
+      },
+      {
+        question: "Pregunta 9: ¿Con qué palabra magnificamos las cosas?",
+        options: ["Super", "Hiper", "Mega", "Ultra"],
+        correct: 2,
+        message: "re mega gori lits mal. data."
+      },
+      {
+        question: "Pregunta 10: Me amás",
+        options: ["Sí", "Mega sí", "Mega mega sí", "Mega mega mega ultra hiper mega recontra re sí mal"],
+        correct: 3,
+        message: "yo más"
+      }
+    ];
+
+    let currentQuestion = 0;
+
+    // Función para mostrar cada pregunta o la sección final.
+    function showQuestion() {
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
+
+      // Si se completaron todas las preguntas, muestra la sección final.
+      if (currentQuestion >= questions.length) {
+        quizDiv.innerHTML = 
+          <div class="final-section">
+            <h2>TE SACASTE 100% MI AMOR</h2>
+            <p>Si querés el regalo, escribí <strong>"luca estaciona mejor que nadie"</strong> total ya sabes que es la verdad.</p>
+            <input type="text" id="finalInput" placeholder="Escribe aquí...">
+            <br>
+            <button onclick="checkFinal()">Enviar</button>
+            <div id="finalMessage" class="message"></div>
+          </div>
+        ;
+        return;
+      }
+
+      const q = questions[currentQuestion];
+
+      // Crear elemento para la pregunta.
+      const questionEl = document.createElement('div');
+      questionEl.className = 'question';
+      questionEl.textContent = q.question;
+      quizDiv.appendChild(questionEl);
+
+      // Crear lista para las opciones.
+      const optionsList = document.createElement('ul');
+      optionsList.className = 'options';
+
+      q.options.forEach((option, index) => {
+        const li = document.createElement('li');
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'option';
+        radio.value = index;
+        radio.id = 'option' + index;
+
+        const label = document.createElement('label');
+        label.htmlFor = 'option' + index;
+        label.textContent = option;
+
+        li.appendChild(radio);
+        li.appendChild(label);
+        optionsList.appendChild(li);
+      });
+      quizDiv.appendChild(optionsList);
+
+      // Botón para enviar la respuesta.
+      const submitButton = document.createElement('button');
+      submitButton.textContent = 'Responder';
+      submitButton.onclick = checkAnswer;
+      quizDiv.appendChild(submitButton);
+    }
+
+    // Función para verificar la respuesta seleccionada.
+    function checkAnswer() {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (!selected) {
+        alert('da');
+        return;
+      }
+
+      const answer = parseInt(selected.value);
+      const q = questions[currentQuestion];
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message';
+
+      // Se muestra el mensaje correspondiente junto con el "verde" (check en verde).
+      if (answer === q.correct) {
+        messageDiv.innerHTML = q.message + ' <span style="color: green;">&#x2714;</span>';
+      } else {
+        messageDiv.innerHTML = "Respondiste mal. Te aparece correcta porque me gustan tus ojos y te la voy a dar como válida. <span style='color: green;'>&#x2714;</span>";
+      }
+
+      const quizDiv = document.getElementById('quiz');
+      // Deshabilitar el botón para evitar respuestas múltiples.
+      const submitButton = quizDiv.querySelector('button');
+      submitButton.disabled = true;
+      quizDiv.appendChild(messageDiv);
+
+      // Pasar a la siguiente pregunta después de 2 segundos.
+      setTimeout(() => {
+        currentQuestion++;
+        showQuestion();
+      }, 2000);
+    }
+
+    // Función para verificar la frase ingresada en la sección final.
+    function checkFinal() {
+      const userInput = document.getElementById('finalInput').value;
+      const finalMessageDiv = document.getElementById('finalMessage');
+      if (userInput.trim() === 'luca estaciona mejor que nadie') {
+          finalMessageDiv.textContent = 'Abrir terminal. Copiar y pegar: Invoke-Item "C:/Users/lucap/OneDrive/Documents/CHICL/topmegasecret_chicl.mp4"';
+      } else {
+          alert('da');
+      }
+    }
+
+    // Iniciar el test.
+    showQuestion();
+  </script>
+</body>
+</html>
